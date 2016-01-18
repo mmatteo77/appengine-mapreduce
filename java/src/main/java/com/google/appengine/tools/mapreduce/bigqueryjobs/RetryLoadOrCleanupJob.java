@@ -49,7 +49,7 @@ final class RetryLoadOrCleanupJob extends
   @Override
   public Value<BigQueryLoadJobReference> run(BigQueryLoadJobReference pollResult,
       Integer numRetries) throws Exception {
-    Job pollJob = BigQueryLoadGoogleCloudStorageFilesJob.getBigquery().jobs()
+    Job pollJob = BigQueryLoadGoogleCloudStorageFilesJob.getBigquery(projectId).jobs()
         .get(pollResult.getJobReference().getProjectId(), pollResult.getJobReference().getJobId())
         .execute();
     ErrorProto fatalError = pollJob.getStatus().getErrorResult();

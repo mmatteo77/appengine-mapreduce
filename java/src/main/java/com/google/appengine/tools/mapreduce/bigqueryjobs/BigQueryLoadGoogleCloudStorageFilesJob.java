@@ -50,7 +50,7 @@ public final class BigQueryLoadGoogleCloudStorageFilesJob extends
   private static final Logger log =
       Logger.getLogger(BigQueryLoadGoogleCloudStorageFilesJob.class.getName());
 
-  static Bigquery getBigquery() {
+  static Bigquery getBigquery(String projectId) {
     List<String> scopes = Lists.newArrayList();
     scopes.add(BigQueryConstants.BQ_SCOPE);
     AppIdentityCredential credential = new AppIdentityCredential.Builder(scopes).build();
@@ -65,6 +65,7 @@ public final class BigQueryLoadGoogleCloudStorageFilesJob extends
     };
     return new Bigquery.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
         .setHttpRequestInitializer(credential).setGoogleClientRequestInitializer(initializer)
+        .setApplicationName(projectId)
         .build();
   }
 

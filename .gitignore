@@ -2,3 +2,4 @@ MANIFEST
 *.pyc
 .idea
 *.iml
+/bin/

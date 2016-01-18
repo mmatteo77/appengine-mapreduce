@@ -31,12 +31,14 @@ final class BigQueryLoadPollJob extends Job1<Void, BigQueryLoadJobReference> {
   private static final long serialVersionUID = 3156995046607209969L;
   private static final Logger log = Logger.getLogger(BigQueryLoadPollJob.class.getName());
   private final String jobStatusHandle;
+  private final String projectId;
 
   /**
    * @param jobStatusHandle handle that is populated by this job on completion.
    */
-  BigQueryLoadPollJob(String jobStatusHandle) {
+  BigQueryLoadPollJob(String jobStatusHandle, String projectId) {
     this.jobStatusHandle = jobStatusHandle;
+    this.projectId = projectId;
   }
 
   @Override
@@ -48,7 +50,7 @@ final class BigQueryLoadPollJob extends Job1<Void, BigQueryLoadJobReference> {
       public void run() {
         String jobRef = jobToPoll.getJobReference().getJobId();
         try {
-          Job pollJob = BigQueryLoadGoogleCloudStorageFilesJob.getBigquery().jobs()
+          Job pollJob = BigQueryLoadGoogleCloudStorageFilesJob.getBigquery(projectId).jobs()
               .get(jobToPoll.getJobReference().getProjectId(), jobRef).execute();
           log.info("Job status of job " + jobRef + " : " + pollJob.getStatus().getState());
           if (pollJob.getStatus().getState().equals("PENDING")

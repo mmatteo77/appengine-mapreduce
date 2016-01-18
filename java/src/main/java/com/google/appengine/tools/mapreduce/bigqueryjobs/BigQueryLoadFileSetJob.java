@@ -56,7 +56,7 @@ final class BigQueryLoadFileSetJob extends Job1<BigQueryLoadJobReference, Intege
     // Set up Bigquery Insert
     try {
       Insert insert =
-          BigQueryLoadGoogleCloudStorageFilesJob.getBigquery().jobs().insert(projectId, job);
+          BigQueryLoadGoogleCloudStorageFilesJob.getBigquery(projectId).jobs().insert(projectId, job);
       Job executedJob = insert.execute();
       log.info("Triggered the bigQuery load job for files " + fileSet + " . Job Id = "
           + executedJob.getId());
@@ -110,7 +110,7 @@ final class BigQueryLoadFileSetJob extends Job1<BigQueryLoadJobReference, Intege
     ImmediateValue<BigQueryLoadJobReference> jobTrigger = immediate(triggerBigQueryLoadJob());
 
     PromisedValue<String> jobStatus = newPromise();
-    futureCall(new BigQueryLoadPollJob(jobStatus.getHandle()), jobTrigger);
+    futureCall(new BigQueryLoadPollJob(jobStatus.getHandle(), projectId), jobTrigger);
 
     return futureCall(new RetryLoadOrCleanupJob(dataset, tableName, projectId, fileSet, schema),
         jobTrigger, immediate(retryCount), waitFor(jobStatus));
