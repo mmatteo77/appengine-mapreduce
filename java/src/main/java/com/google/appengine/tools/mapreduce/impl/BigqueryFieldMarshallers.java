@@ -113,6 +113,9 @@ public class BigqueryFieldMarshallers {
     @Override
     public Object getFieldValue(Field field, Object object) {
       Date date = (Date) BigQueryFieldUtil.getFieldValue(field, object);
+      if (date == null) {
+    	  return date;
+      }
       return date.getTime() / 1000.0;
     }
 
@@ -126,6 +129,9 @@ public class BigqueryFieldMarshallers {
     @Override
     public Object getFieldValue(Field field, Object object) {
       Calendar calendar = (Calendar) BigQueryFieldUtil.getFieldValue(field, object);
+      if (calendar == null) {
+    	  return calendar;
+      }
       return calendar.getTimeInMillis() / 1000.0;
     }
 
